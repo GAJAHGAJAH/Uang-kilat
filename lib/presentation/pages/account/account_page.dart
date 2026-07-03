@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/biometric_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/app_avatar.dart';
@@ -133,7 +134,7 @@ class AccountPage extends StatelessWidget {
                               title: 'Login biometrik',
                               subtitle: 'Sidik jari',
                               onTap: () {},
-                              right: _Toggle(),
+                              right: _BiometricToggle(),
                             ),
                           ],
                         ),
@@ -273,17 +274,70 @@ class _Row extends StatelessWidget {
   }
 }
 
-class _Toggle extends StatefulWidget {
+class _BiometricToggle extends StatefulWidget {
   @override
-  State<_Toggle> createState() => _ToggleState();
+  State<_BiometricToggle> createState() => _BiometricToggleState();
 }
 
-class _ToggleState extends State<_Toggle> {
-  bool _on = true;
+class _BiometricToggleState extends State<_BiometricToggle> {
+  final _biometricService = BiometricService();
+  bool _on = false; // Default OFF sampai user aktifkan
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadStatus();
+  }
+
+  Future<void> _loadStatus() async {
+    final enabled = await _biometricService.isEnabled();
+    if (mounted) {
+      setState(() {
+        _on = enabled;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _toggle() async {
+    if (_on) {
+      // Matikan biometrik
+      await _biometricService.disable();
+      if (mounted) setState(() => _on = false);
+    } else {
+      // Cek dulu apakah perangkat mendukung biometrik
+      final available = await _biometricService.isAvailable();
+      if (!available) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Perangkat Anda tidak mendukung biometrik atau belum mendaftarkan sidik jari.'),
+              backgroundColor: AppColors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Verifikasi sidik jari sebelum mengaktifkan
+      final authenticated = await _biometricService.authenticate(
+        reason: 'Verifikasi sidik jari untuk mengaktifkan login biometrik',
+      );
+      if (authenticated) {
+        await _biometricService.enable();
+        if (mounted) setState(() => _on = true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const SizedBox(width: 44, height: 26);
+    }
     return GestureDetector(
-      onTap: () => setState(() => _on = !_on),
+      onTap: _toggle,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         width: 44,
@@ -310,3 +364,4 @@ class _ToggleState extends State<_Toggle> {
     );
   }
 }
+
