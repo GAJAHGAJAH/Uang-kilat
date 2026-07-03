@@ -82,7 +82,6 @@ class _BiometricLockPageState extends State<BiometricLockPage>
   }
 
   void _onSuccess() {
-    // Cek pending deeplink payment
     final pending = DeeplinkService.consumePending();
     if (pending != null) {
       context.go('/pay', extra: pending);
@@ -91,11 +90,10 @@ class _BiometricLockPageState extends State<BiometricLockPage>
     }
   }
 
-  /// Ikon biometrik sesuai tipe yang tersedia
   IconData get _biometricIcon {
     if (_biometrics.contains(BiometricType.face)) return Icons.face_unlock_rounded;
     if (_biometrics.contains(BiometricType.iris)) return Icons.remove_red_eye_rounded;
-    return Icons.fingerprint_rounded; // default fingerprint
+    return Icons.fingerprint_rounded;
   }
 
   String get _biometricLabel {
@@ -107,151 +105,159 @@ class _BiometricLockPageState extends State<BiometricLockPage>
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, // Block back button — user harus autentikasi
+      canPop: false,
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
           child: SafeArea(
-            child: Stack(
-              children: [
-                // Dekoratif lingkaran
-                Positioned(
-                  top: -80,
-                  right: -60,
-                  child: Container(
-                    width: 260,
-                    height: 260,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.06),
-                    ),
-                  ),
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
                 ),
-                Positioned(
-                  bottom: 160,
-                  left: -80,
-                  child: Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.05),
-                    ),
-                  ),
-                ),
-
-                // Konten utama
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: Column(
-                    children: [
-                      const Spacer(flex: 2),
-
-                      // Logo
-                      const AppLogo(size: 72, light: true),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Uang Kilat',
-                        style: TextStyle(
-                          fontFamily: 'PlusJakartaSans',
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -0.5,
+                child: Stack(
+                  children: [
+                    // Dekoratif lingkaran atas
+                    Positioned(
+                      top: -80,
+                      right: -60,
+                      child: Container(
+                        width: 260,
+                        height: 260,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.06),
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Verifikasi identitas Anda untuk melanjutkan',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'PlusJakartaSans',
-                          fontSize: 14,
-                          color: Colors.white70,
-                          height: 1.4,
+                    ),
+                    // Dekoratif lingkaran bawah
+                    Positioned(
+                      bottom: 160,
+                      left: -80,
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.05),
                         ),
                       ),
+                    ),
+                    // Konten utama
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 60),
 
-                      const Spacer(flex: 2),
+                          // Logo
+                          const AppLogo(size: 72, light: true),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Uang Kilat',
+                            style: TextStyle(
+                              fontFamily: 'PlusJakartaSans',
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Verifikasi identitas Anda untuk melanjutkan',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'PlusJakartaSans',
+                              fontSize: 14,
+                              color: Colors.white70,
+                              height: 1.4,
+                            ),
+                          ),
 
-                      // Tombol biometrik dengan animasi pulse
-                      GestureDetector(
-                        onTap: _isAuthenticating ? null : _authenticate,
-                        child: Column(
-                          children: [
-                            AnimatedBuilder(
-                              animation: _pulseAnim,
-                              builder: (_, child) => Transform.scale(
-                                scale: _isAuthenticating ? _pulseAnim.value : 1.0,
-                                child: child,
-                              ),
-                              child: Container(
-                                width: 110,
-                                height: 110,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white.withValues(alpha: 0.15),
-                                  border: Border.all(
-                                    color: _hasFailed
-                                        ? Colors.redAccent.withValues(alpha: 0.8)
-                                        : Colors.white.withValues(alpha: 0.35),
-                                    width: 2,
+                          const SizedBox(height: 80),
+
+                          // Tombol biometrik dengan animasi pulse
+                          GestureDetector(
+                            onTap: _isAuthenticating ? null : _authenticate,
+                            child: Column(
+                              children: [
+                                AnimatedBuilder(
+                                  animation: _pulseAnim,
+                                  builder: (_, child) => Transform.scale(
+                                    scale: _isAuthenticating ? _pulseAnim.value : 1.0,
+                                    child: child,
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.2),
-                                      blurRadius: 30,
-                                      spreadRadius: 5,
+                                  child: Container(
+                                    width: 110,
+                                    height: 110,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.15),
+                                      border: Border.all(
+                                        color: _hasFailed
+                                            ? Colors.redAccent.withOpacity(0.8)
+                                            : Colors.white.withOpacity(0.35),
+                                        width: 2,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 30,
+                                          spreadRadius: 5,
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                    child: Icon(
+                                      _biometricIcon,
+                                      size: 54,
+                                      color: _hasFailed
+                                          ? Colors.redAccent
+                                          : Colors.white,
+                                    ),
+                                  ),
                                 ),
-                                child: Icon(
-                                  _biometricIcon,
-                                  size: 54,
-                                  color: _hasFailed
-                                      ? Colors.redAccent
-                                      : Colors.white,
+                                const SizedBox(height: 18),
+                                Text(
+                                  _isAuthenticating
+                                      ? 'Menunggu $_biometricLabel...'
+                                      : 'Ketuk untuk $_biometricLabel',
+                                  style: TextStyle(
+                                    fontFamily: 'PlusJakartaSans',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white.withOpacity(0.9),
+                                  ),
                                 ),
-                              ),
+                                if (_errorMsg != null) ...[
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _errorMsg!,
+                                    style: const TextStyle(
+                                      fontFamily: 'PlusJakartaSans',
+                                      fontSize: 13,
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
-                            const SizedBox(height: 18),
-                            Text(
-                              _isAuthenticating
-                                  ? 'Menunggu $_biometricLabel...'
-                                  : 'Ketuk untuk $_biometricLabel',
-                              style: TextStyle(
-                                fontFamily: 'PlusJakartaSans',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white.withValues(alpha: 0.9),
-                              ),
-                            ),
-                            if (_errorMsg != null) ...[
-                              const SizedBox(height: 8),
-                              Text(
-                                _errorMsg!,
-                                style: const TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  fontSize: 13,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+                          ),
+
+                          const SizedBox(height: 60),
+
+                          // Tombol coba lagi (muncul setelah gagal)
+                          if (_hasFailed) _buildRetryButton(),
+
+                          const SizedBox(height: 40),
+                        ],
                       ),
-
-                      const Spacer(flex: 3),
-
-                      // Tombol coba lagi (muncul setelah gagal)
-                      if (_hasFailed)
-                        _buildRetryButton(),
-
-                      const SizedBox(height: 32),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -271,7 +277,7 @@ class _BiometricLockPageState extends State<BiometricLockPage>
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
+                  color: Colors.black.withOpacity(0.15),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),

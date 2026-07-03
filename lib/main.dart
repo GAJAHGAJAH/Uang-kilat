@@ -59,15 +59,21 @@ class _UangKilatAppState extends State<UangKilatApp> {
   final _biometricService = BiometricService();
   late final AppLifecycleListener _lifecycleListener;
 
-  /// Flag: apakah app sedang dalam status "terkunci" karena pindah ke background.
-  bool _lockedOnResume = false;
+  /// Flag: app benar-benar ke background (bukan hanya inactive karena dialog sistem).
+  bool _isInBackground = false;
+
+  /// Flag: sedang di halaman biometric lock, hindari double redirect.
+  bool _isOnBiometricLock = false;
 
   @override
   void initState() {
     super.initState();
     _lifecycleListener = AppLifecycleListener(
-      onInactive: _onInactive,
+      // onHide = app benar-benar tersembunyi ke background (bukan sekedar dialog overlay)
+      onHide: _onHide,
       onResume: _onResume,
+      // onShow dipanggil saat app kembali visible, dipakai untuk reset flag
+      onShow: () => _isOnBiometricLock = false,
     );
   }
 
@@ -77,20 +83,23 @@ class _UangKilatAppState extends State<UangKilatApp> {
     super.dispose();
   }
 
-  /// Dipanggil saat app pindah ke background / layar terkunci.
+  /// Dipanggil saat app BENAR-BENAR pindah ke background.
   /// Tandai bahwa biometrik harus ditrigger saat resume.
-  Future<void> _onInactive() async {
+  Future<void> _onHide() async {
     final enabled = await _biometricService.isEnabled();
     if (enabled) {
-      _lockedOnResume = true;
+      _isInBackground = true;
     }
   }
 
   /// Dipanggil saat app kembali ke foreground.
-  /// Jika flag terkunci aktif, redirect ke BiometricLockPage.
+  /// Jika flag background aktif, redirect ke BiometricLockPage.
   Future<void> _onResume() async {
-    if (!_lockedOnResume) return;
-    _lockedOnResume = false;
+    if (!_isInBackground) return;
+    _isInBackground = false;
+
+    // Hindari double-redirect jika sudah di biometric lock page
+    if (_isOnBiometricLock) return;
 
     final enabled = await _biometricService.isEnabled();
     if (!enabled) return;
@@ -99,6 +108,7 @@ class _UangKilatAppState extends State<UangKilatApp> {
     if (!available) return;
 
     // Navigasi ke layar lock biometrik
+    _isOnBiometricLock = true;
     // ignore: use_build_context_synchronously
     AppRouter.router.go('/biometric-lock');
   }
