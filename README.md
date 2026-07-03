@@ -152,3 +152,19 @@ Be-Catalog-ku/
 ├── go.mod
 └── .env
 ```
+
+## Link Repositories & Presentasi Youtube
+
+### Github Repository
+
+* [Store Ku](https://github.com/GAJAHGAJAH/store-ac.git) - Klik untuk melihat repositori Store Ac
+
+* [Uang Kilat](https://github.com/GAJAHGAJAH/Uang-kilat.git) - Klik untuk melihat repositori Uang KILAT
+
+* [Backend Store Ku](https://github.com/GAJAHGAJAH/be-store-ac-ku.git) - Klik untuk melihat repositori Backend Api Store Ac
+
+* [Backend Uang Kilat](https://github.com/GAJAHGAJAH/be-uang-kilat.git) - Klik untuk melihat repositori Backend Api Store ku
+
+### Presentasi Youtube
+
+* [Link Presentasi Youtube](https://youtube.com) - Klik untuk melihat presentasi Youtube
