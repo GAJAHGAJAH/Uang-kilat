@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Blue
-  static const Color primary = Color(0xFF0B63E5);
-  static const Color primaryLight = Color(0xFF2C8BFF);
-  static const Color primaryDark = Color(0xFF0A4FBF);
-  static const Color primarySurface = Color(0xFFE8F1FD);
-  static const Color primaryBorder = Color(0xFFB8D0F7);
+  // Primary Electric Blue & Lightning Yellow
+  static const Color primary = Color(0xFF1E88E5);      // Electric Blue
+  static const Color primaryLight = Color(0xFF64B5F6); // Soft Ice Blue
+  static const Color primaryDark = Color(0xFF0D47A1);  // Deep Midnight Blue
+  static const Color primarySurface = Color(0xFFE3F2FD); // Light Sky Surface
+  static const Color primaryBorder = Color(0xFF90CAF9);
+  
+  static const Color lightningYellow = Color(0xFFFFD600); // Electric Lightning Yellow
 
   // Semantic
   static const Color green = Color(0xFF16A571);
   static const Color greenSurface = Color(0xFFE8F8F2);
-  static const Color amber = Color(0xFFD98512);
-  static const Color amberSurface = Color(0xFFFDF3E3);
+  static const Color amber = Color(0xFFFFB300); // Electric Yellow Amber
+  static const Color amberSurface = Color(0xFFFFF8E1);
   static const Color red = Color(0xFFE5484D);
   static const Color redSurface = Color(0xFFFDECED);
   static const Color violet = Color(0xFF7A5AF8);
@@ -29,12 +31,16 @@ class AppColors {
   static const Color bg = Color(0xFFF6F7F9);
   static const Color white = Color(0xFFFFFFFF);
 
-  // Gradient
+  // Gradient: Deep Blue to Electric Blue with an Electric Yellow bolt highlight
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: [0.0, 0.55, 1.0],
-    colors: [primaryLight, primary, primaryDark],
+    stops: [0.0, 0.65, 1.0],
+    colors: [
+      Color(0xFF0A192F), // Deep Space Blue
+      Color(0xFF1E88E5), // Electric Blue
+      Color(0xFFFFEA00), // Lightning Yellow Flash
+    ],
   );
 
   // Shadows
@@ -56,7 +62,7 @@ class AppColors {
   ];
   static List<BoxShadow> shadowPrimary = [
     BoxShadow(
-      color: Color(0x520B63E5),
+      color: Color(0x521E88E5),
       blurRadius: 22,
       spreadRadius: 0,
       offset: Offset(0, 10),
