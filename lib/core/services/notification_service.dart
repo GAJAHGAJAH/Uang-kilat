@@ -78,7 +78,7 @@ class NotificationService {
 
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      'Top Up Berhasil! ⚡',
+      'Top Up Berhasil!',
       'Isi saldo sebesar $formattedAmount sukses. Saldo Uang Kilat kamu sekarang: $formattedBalance.',
       notificationDetails,
     );
