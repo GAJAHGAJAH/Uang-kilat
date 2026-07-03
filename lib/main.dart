@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/router/app_router.dart';
+import 'core/services/biometric_service.dart';
 import 'core/services/deeplink_service.dart';
 import 'core/services/notification_service.dart';
 import 'core/theme/app_theme.dart';
@@ -47,8 +48,60 @@ void main() async {
   runApp(const UangKilatApp());
 }
 
-class UangKilatApp extends StatelessWidget {
+class UangKilatApp extends StatefulWidget {
   const UangKilatApp({super.key});
+
+  @override
+  State<UangKilatApp> createState() => _UangKilatAppState();
+}
+
+class _UangKilatAppState extends State<UangKilatApp> {
+  final _biometricService = BiometricService();
+  late final AppLifecycleListener _lifecycleListener;
+
+  /// Flag: apakah app sedang dalam status "terkunci" karena pindah ke background.
+  bool _lockedOnResume = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleListener = AppLifecycleListener(
+      onInactive: _onInactive,
+      onResume: _onResume,
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+    super.dispose();
+  }
+
+  /// Dipanggil saat app pindah ke background / layar terkunci.
+  /// Tandai bahwa biometrik harus ditrigger saat resume.
+  Future<void> _onInactive() async {
+    final enabled = await _biometricService.isEnabled();
+    if (enabled) {
+      _lockedOnResume = true;
+    }
+  }
+
+  /// Dipanggil saat app kembali ke foreground.
+  /// Jika flag terkunci aktif, redirect ke BiometricLockPage.
+  Future<void> _onResume() async {
+    if (!_lockedOnResume) return;
+    _lockedOnResume = false;
+
+    final enabled = await _biometricService.isEnabled();
+    if (!enabled) return;
+
+    final available = await _biometricService.isAvailable();
+    if (!available) return;
+
+    // Navigasi ke layar lock biometrik
+    // ignore: use_build_context_synchronously
+    AppRouter.router.go('/biometric-lock');
+  }
 
   @override
   Widget build(BuildContext context) {

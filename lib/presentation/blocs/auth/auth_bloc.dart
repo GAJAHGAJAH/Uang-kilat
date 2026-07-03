@@ -7,6 +7,7 @@ import '../../../domain/usecases/auth/logout_usecase.dart';
 import '../../../domain/usecases/auth/send_otp_usecase.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import '../../../core/error/failures.dart';
+import '../../../core/services/biometric_service.dart';
 
 // Events
 abstract class AuthEvent extends Equatable {
@@ -63,6 +64,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetMeUsecase _getMe;
   final LogoutUsecase _logout;
   final AuthRepository _authRepo;
+  final _biometricService = BiometricService();
 
   AuthBloc({
     required VerifyFirebaseTokenUsecase verifyToken,
@@ -123,6 +125,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLogout(AuthLogoutRequested event, Emitter<AuthState> emit) async {
+    // Nonaktifkan biometrik saat logout — tidak perlu biometrik jika tidak ada sesi
+    await _biometricService.disable();
     await _logout();
     emit(AuthUnauthenticated());
   }

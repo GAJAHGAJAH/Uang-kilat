@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/biometric_service.dart';
 import '../../../core/services/deeplink_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/auth_bloc.dart';
@@ -15,10 +16,33 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final _biometricService = BiometricService();
+
   @override
   void initState() {
     super.initState();
     context.read<AuthBloc>().add(AuthCheckRequested());
+  }
+
+  /// Dipanggil saat AuthBloc mengonfirmasi user sudah login.
+  /// Jika biometrik diaktifkan & tersedia → tampilkan layar lock biometrik.
+  /// Jika tidak → langsung ke home (atau deeplink payment jika ada).
+  Future<void> _handleAuthenticated() async {
+    final biometricEnabled = await _biometricService.isEnabled();
+    final biometricAvailable = await _biometricService.isAvailable();
+
+    if (!mounted) return;
+
+    if (biometricEnabled && biometricAvailable) {
+      context.go('/biometric-lock');
+    } else {
+      final pending = DeeplinkService.consumePending();
+      if (pending != null) {
+        context.go('/pay', extra: pending);
+      } else {
+        context.go('/home');
+      }
+    }
   }
 
   @override
@@ -26,16 +50,9 @@ class _SplashPageState extends State<SplashPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          // Cek apakah ada deeplink payment yang menunggu (cold-start via deeplink).
-          // Jika ada, langsung ke halaman konfirmasi. Jika tidak, ke home.
-          final pending = DeeplinkService.consumePending();
-          if (pending != null) {
-            context.go('/pay', extra: pending);
-          } else {
-            context.go('/home');
-          }
+          _handleAuthenticated();
         } else if (state is AuthUnauthenticated) {
-          // Stay on splash to show welcome
+          // Tetap di splash untuk tampilkan welcome screen
         }
       },
       child: Scaffold(

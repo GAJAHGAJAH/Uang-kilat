@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/services/biometric_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/otp_bloc.dart';
@@ -22,6 +23,7 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
   bool _hasError = false;
   int _timer = AppConstants.otpResendSeconds;
   Timer? _countdown;
+  final _biometricService = BiometricService();
 
   @override
   void initState() {
@@ -57,6 +59,8 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
     return BlocListener<OtpBloc, OtpState>(
       listener: (context, state) {
         if (state is OtpVerified) {
+          // Aktifkan biometrik untuk sesi berikutnya
+          _biometricService.enable();
           if (widget.mode == 'setup') {
             context.go('/home');
           } else {

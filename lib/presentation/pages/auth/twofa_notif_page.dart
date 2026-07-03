@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/biometric_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/otp_bloc.dart';
 import '../../widgets/feature_icon.dart';
@@ -15,6 +16,7 @@ class TwoFANotifPage extends StatefulWidget {
 
 class _TwoFANotifPageState extends State<TwoFANotifPage> {
   String _phase = 'waiting'; // waiting, approved
+  final _biometricService = BiometricService();
 
   @override
   void initState() {
@@ -28,6 +30,8 @@ class _TwoFANotifPageState extends State<TwoFANotifPage> {
       listener: (context, state) {
         if (state is OtpVerified) {
           setState(() => _phase = 'approved');
+          // Aktifkan biometrik untuk sesi berikutnya
+          _biometricService.enable();
           Future.delayed(const Duration(milliseconds: 900), () {
             if (mounted) context.go('/home');
           });

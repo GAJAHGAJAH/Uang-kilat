@@ -7,6 +7,7 @@ import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/auth/otp_bloc.dart';
 import '../../presentation/blocs/payment/payment_bloc.dart';
 import '../../presentation/pages/account/account_page.dart';
+import '../../presentation/pages/auth/biometric_lock_page.dart';
 import '../../presentation/pages/auth/login_page.dart';
 import '../../presentation/pages/auth/register_page.dart';
 import '../../presentation/pages/auth/setup_2fa_page.dart';
@@ -45,6 +46,10 @@ class AppRouter {
           GoRoute(
             path: '/login',
             builder: (_, __) => _withAuth(const LoginPage()),
+          ),
+          GoRoute(
+            path: '/biometric-lock',
+            builder: (_, __) => const BiometricLockPage(),
           ),
           GoRoute(
             path: '/register',

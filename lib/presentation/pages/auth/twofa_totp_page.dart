@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/biometric_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/otp_bloc.dart';
 import '../../widgets/app_button.dart';
@@ -23,6 +24,7 @@ class _TwoFATotpPageState extends State<TwoFATotpPage> {
   bool _copied = false;
   int _ttl = 30;
   Timer? _ticker;
+  final _biometricService = BiometricService();
 
   @override
   void initState() {
@@ -57,6 +59,8 @@ class _TwoFATotpPageState extends State<TwoFATotpPage> {
         if (state is OtpTotpSetup) {
           setState(() => _step = 'scan');
         } else if (state is OtpTotpEnabled || state is OtpVerified) {
+          // Aktifkan biometrik untuk sesi berikutnya
+          _biometricService.enable();
           context.go('/home');
         } else if (state is OtpInvalid) {
           setState(() => _hasError = true);
