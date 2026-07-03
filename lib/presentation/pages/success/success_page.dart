@@ -8,11 +8,16 @@ import '../../widgets/app_button.dart';
 import '../../widgets/feature_icon.dart';
 import '../../widgets/success_check.dart';
 
+import '../../../core/services/deeplink_callback_service.dart';
+
 class SuccessPage extends StatefulWidget {
   final String title;
   final String subtitle;
   final double amount;
   final List<List<String>> lines;
+  final String? callbackUrl;
+  final String? reference;
+  final int? transactionId;
 
   const SuccessPage({
     super.key,
@@ -20,6 +25,9 @@ class SuccessPage extends StatefulWidget {
     required this.subtitle,
     required this.amount,
     required this.lines,
+    this.callbackUrl,
+    this.reference,
+    this.transactionId,
   });
 
   @override
@@ -131,8 +139,17 @@ class _SuccessPageState extends State<SuccessPage> {
               child: Column(
                 children: [
                   AppButton(
-                    label: 'Selesai',
-                    onPressed: () => context.go('/home'),
+                    label: widget.callbackUrl != null ? 'Kembali ke Aplikasi' : 'Selesai',
+                    onPressed: () {
+                      if (widget.callbackUrl != null) {
+                        DeeplinkCallbackService.notifySuccess(
+                          callbackUrl: widget.callbackUrl!,
+                          reference: widget.reference,
+                          transactionId: widget.transactionId ?? 0,
+                        );
+                      }
+                      context.go('/home');
+                    },
                   ),
                   const SizedBox(height: 10),
                   AppButton(

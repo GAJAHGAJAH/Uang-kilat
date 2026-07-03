@@ -175,6 +175,9 @@ class _PinPageState extends State<PinPage> {
                 'title': 'Pembayaran berhasil',
                 'subtitle': result.description,
                 'amount': result.amount,
+                'callbackUrl': cb,
+                'reference': _callbackReference,
+                'transactionId': result.transactionId,
                 'lines': [
                   ['Jumlah', CurrencyFormatter.format(result.amount)],
                   ['Saldo setelah', CurrencyFormatter.format(result.balanceAfter)],
