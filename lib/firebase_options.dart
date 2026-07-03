@@ -17,16 +17,16 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -49,20 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCWAzGMTyg1uSspi1qfno71sj4iCfp7qGk',
-    appId: '1:948878883710:android:516b94bdc2276b68a0512f',
-    messagingSenderId: '948878883710',
-    projectId: 'fir-emoney-e9256',
-    storageBucket: 'fir-emoney-e9256.firebasestorage.app',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCHyAUEYTF2tlf9g7G0I1g6i-4KQxZ9R7M',
+    appId: '1:961506839622:web:bcf4a2109ddfa3a7304e47',
+    messagingSenderId: '961506839622',
+    projectId: 'uang-kilat-135d1',
+    authDomain: 'uang-kilat-135d1.firebaseapp.com',
+    storageBucket: 'uang-kilat-135d1.firebasestorage.app',
+    measurementId: 'G-331WL2WNJT',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA46uBUvmVQKsSL7HIXZG58MD9jXQCFX7c',
-    appId: '1:948878883710:ios:5363ad2b9fbe06b2a0512f',
-    messagingSenderId: '948878883710',
-    projectId: 'fir-emoney-e9256',
-    storageBucket: 'fir-emoney-e9256.firebasestorage.app',
-    iosBundleId: 'com.kampus.dompetKampusGlobal',
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyAEuNOOmiXv3DdZU1C-joizNBZYJFsIAjM',
+    appId: '1:961506839622:android:eb65c506d8ac62c6304e47',
+    messagingSenderId: '961506839622',
+    projectId: 'uang-kilat-135d1',
+    storageBucket: 'uang-kilat-135d1.firebasestorage.app',
   );
 }

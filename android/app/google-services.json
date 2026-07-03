@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "961506839622",
+    "project_id": "uang-kilat-135d1",
+    "storage_bucket": "uang-kilat-135d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961506839622:android:eb65c506d8ac62c6304e47",
+        "android_client_info": {
+          "package_name": "com.gajahgajah.uang_kilat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961506839622-qqhgm65sdtqvf77uoa74spd683v5tj3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEuNOOmiXv3DdZU1C-joizNBZYJFsIAjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961506839622-qqhgm65sdtqvf77uoa74spd683v5tj3i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
