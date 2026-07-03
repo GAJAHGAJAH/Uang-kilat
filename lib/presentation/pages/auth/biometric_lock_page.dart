@@ -107,7 +107,13 @@ class _BiometricLockPageState extends State<BiometricLockPage>
     return PopScope(
       canPop: false,
       child: Scaffold(
+        // Scaffold harus transparan agar gradient di Container terlihat di balik status bar
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
         body: Container(
+          // Gradient menutupi SELURUH layar termasuk area status bar
+          width: double.infinity,
+          height: double.infinity,
           decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
           child: SafeArea(
             child: SingleChildScrollView(
