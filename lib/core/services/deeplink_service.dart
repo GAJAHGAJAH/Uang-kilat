@@ -157,9 +157,12 @@ class DeeplinkService {
   }
 
   bool _isPaymentLink(Uri uri) {
-    if (uri.scheme == 'dompetkampus' && uri.host == 'pay') return true;
+    if ((uri.scheme == 'uangkilat' || uri.scheme == 'dompetkampus') &&
+        uri.host == 'pay') {
+      return true;
+    }
     if (uri.scheme == 'https' &&
-        uri.host == 'dompetkampus.app' &&
+        (uri.host == 'uangkilat.app' || uri.host == 'dompetkampus.app') &&
         uri.path.startsWith('/pay')) {
       return true;
     }

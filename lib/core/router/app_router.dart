@@ -163,7 +163,7 @@ class AppRouter {
             },
           ),
           GoRoute(path: '/merchant', builder: (_, __) => _withPayment(const MerchantCheckoutPage())),
-          // Pembayaran via deeplink merchant (dompetkampus://pay?... atau https://dompetkampus.app/pay?...)
+          // Pembayaran via deeplink merchant (uangkilat://pay?... atau https://uangkilat.app/pay?...)
           GoRoute(
             path: '/pay',
             builder: (_, state) => _withPayment(PaymentDeeplinkPage(data: state.extra)),

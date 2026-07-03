@@ -13,7 +13,7 @@ class AppLogo extends StatelessWidget {
     const fontFamily = 'PlusJakartaSans';
 
     Widget icon = Image.asset(
-      'assets/images/logo-dompet.png',
+      'assets/icons/uang-kilat.png',
       width: size,
       height: size,
       fit: BoxFit.contain,
@@ -31,7 +31,7 @@ class AppLogo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Dompet Kampus',
+              'Uang Kilat',
               style: TextStyle(
                 fontFamily: fontFamily,
                 fontSize: size * 0.3,
@@ -42,7 +42,7 @@ class AppLogo extends StatelessWidget {
               ),
             ),
             Text(
-              'GLOBAL',
+              'E-MONEY',
               style: TextStyle(
                 fontFamily: fontFamily,
                 fontSize: size * 0.205,

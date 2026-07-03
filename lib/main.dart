@@ -40,16 +40,16 @@ void main() async {
   _deeplinkService = DeeplinkService(AppRouter.router);
   await _deeplinkService.init();
 
-  runApp(const DompetKampusApp());
+  runApp(const UangKilatApp());
 }
 
-class DompetKampusApp extends StatelessWidget {
-  const DompetKampusApp({super.key});
+class UangKilatApp extends StatelessWidget {
+  const UangKilatApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Dompet Kampus Global',
+      title: 'Uang Kilat',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: AppRouter.router,
