@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "961506839622-r4hli55c99g4k5dr8lnb05j5igo34qco.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gajahgajah.uang_kilat",
+            "certificate_hash": "662c3663588851ddbe4ec4d33ce4bee09e659c6d"
+          }
+        },
+        {
           "client_id": "961506839622-qqhgm65sdtqvf77uoa74spd683v5tj3i.apps.googleusercontent.com",
           "client_type": 3
         }
