@@ -167,4 +167,4 @@ Be-Catalog-ku/
 
 ### Presentasi Youtube
 
-* [Link Presentasi Youtube](https://youtube.com) - Klik untuk melihat presentasi Youtube
+* [Link Presentasi Youtube](https://youtu.be/5e0E1nHW-K0?si=14PDjSzZVp0Y_HzE) - Klik untuk melihat presentasi Youtube
